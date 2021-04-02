@@ -27,4 +27,5 @@ def makeLoginGUI():
 
     #initiate window
     tkWindow.mainloop()
+print("Baivab is gay")
 makeLoginGUI()
