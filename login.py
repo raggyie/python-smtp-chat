@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from Tkinter import *
+from tkinter import *
 
 
 
