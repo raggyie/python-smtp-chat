@@ -27,5 +27,4 @@ def makeLoginGUI():
 
     #initiate window
     tkWindow.mainloop()
-print("raghavendra's git push")
 makeLoginGUI()
