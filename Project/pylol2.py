@@ -44,7 +44,15 @@ current_email=""
 
 
 class Contact():
+
+
     def __init__(self):
+        def add_contact_tofile():  
+            file1 = open("contacts.txt", "a")  # append mode
+            file1.write(email_entry.get()+":"+username_entry.get()+"\n")
+            file1.close()       
+            contact_window.destroy()  
+
         contact_window=tk.Tk()
         contact_window.title('Add Contact')
         contact_window.geometry('400x300')
@@ -66,11 +74,7 @@ class Contact():
         close.place(x=160,y=240)
         contact_window.mainloop()
 
-    def add_contact_tofile():  
-        file1 = open("contacts.txt", "a")  # append mode
-        file1.write(username_entry.get()+":"+email_entry.get()+"\n")
-        file1.close()       
-        contact_window.destroy()     
+   
 
 
 
@@ -118,7 +122,7 @@ class Login():
 
 
             def add_contact():
-                contact=Contact
+                contact=Contact()
          
           
     
