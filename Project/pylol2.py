@@ -47,12 +47,7 @@ class Contact():
 
 
     def __init__(self):
-        def add_contact_tofile():  
-            file1 = open("contacts.txt", "a")  # append mode
-            file1.write(email_entry.get()+":"+username_entry.get()+"\n")
-            file1.close()       
-            contact_window.destroy()  
-
+        
         contact_window=tk.Tk()
         contact_window.title('Add Contact')
         contact_window.geometry('400x300')
@@ -62,18 +57,23 @@ class Contact():
         contact_header.place(x=0,y=0)
         email_contact = Label(contact_window,text="Email Address",font= ('verdana',10,'bold'))
         email_contact.place(x=100,y=70)
-        email_entry = Entry(contact_window,width=30,relief=RIDGE,borderwidth=3)
-        email_entry.place(x=100,y=100)
+        self.email_entry = Entry(contact_window,width=30,relief=RIDGE,borderwidth=3)
+        self.email_entry.place(x=100,y=100)
         username = Label(contact_window,text="Username",font= ('verdana',10,'bold'))
         username.place(x=100,y=130)
-        username_entry = Entry(contact_window,width=30,relief=RIDGE,borderwidth=3)
-        username_entry.place(x=100,y=160)
-        add = Button(contact_window,text="Add Contact",padx=30,bg="orange",relief=RIDGE,borderwidth=1,font= ('verdana',10,'bold'),cursor="hand2",command=add_contact_tofile)
+        self.username_entry = Entry(contact_window,width=30,relief=RIDGE,borderwidth=3)
+        self.username_entry.place(x=100,y=160)
+        add = Button(contact_window,text="Add Contact",padx=30,bg="orange",relief=RIDGE,borderwidth=1,font= ('verdana',10,'bold'),cursor="hand2",command=self.add_contact_tofile)
         add.place(x=135,y=200)
         close = Button(contact_window,text="Close",padx=30,bg="orange",relief=RIDGE,borderwidth=1,font= ('verdana',10,'bold'),cursor="hand2")
         close.place(x=160,y=240)
         contact_window.mainloop()
 
+    def add_contact_tofile(self):  
+            file1 = open("Project/contacts.txt", "a")  # append mode
+            file1.write(self.email_entry.get()+":"+self.username_entry.get()+"\n")
+            file1.close()       
+            contact_window.destroy()  
    
 
 
@@ -99,7 +99,7 @@ class Login():
                 s.login(e,p) #attempt to log into smtp server
                 messagebox.showinfo("Login Success","You have Logged to Gmail Successfully")
 
-                filepath = 'contacts.txt'
+                filepath = 'Project/contacts.txt'
                 with open(filepath) as fp:
                     line = fp.readline()
                     while line:
@@ -459,7 +459,7 @@ header.place(x=0,y=0)
 h1 = Label(root,text="Email Instant Messenger",bg="orange",fg="black",font= ('verdana',13,'bold'))
 h1.place(x=135,y=5)
 
-img = ImageTk.PhotoImage(Image.open('gmail.png'))
+img = ImageTk.PhotoImage(Image.open('Project/gmail.png'))
 
 logo = Label(root,image=img,borderwidth=0)
 logo.place(x=150,y=38)
