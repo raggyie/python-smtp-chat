@@ -32,6 +32,10 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+import threading
+from time import sleep
+
+
 tl=Timeloop()
 
 e=""
@@ -165,7 +169,7 @@ class Login():
 
     global e,p,main         
         
-            
+sr=None
 
 class Chat_window:
     def __init__(self):
@@ -206,9 +210,10 @@ class Chat_window:
         self.chatlog = tk.Text(frame2, height=35, state=tk.DISABLED)
 
         self.userIn = tk.Entry(frame2,width=80)
+        global sr 
+        sr=Send_Receive(self,e,p)
 
-        sr=Send_Receive(self)
-
+        
         send = tk.Button(frame2, text="Send Message",command=sr.Send)
         send_doc = tk.Button(frame2, text="Send Document",command=sr.Send_Document)
         #addcontact_button = tk.Button(frame2, text="Add Contact")
@@ -239,6 +244,12 @@ class Chat_window:
 
         
         self.contact_input.bind("<Button-1>", lambda event: clear_entry(event, self.contact_input))
+
+        
+        
+
+
+
         def Connect():
             global mode
             if self.contact_input.get().isnumeric:
@@ -258,6 +269,7 @@ class Chat_window:
                 
                     self.chatlog.insert(tk.END, "You are now chatting with "+username_array[int(k)-2]+"\n" )
                 tl.start(block=False)
+                #threading._start_new_thread(sr.listen())
                 self.chatlog.config(state=tk.DISABLED)
         add = tk.Button(frame1, text="Connect",command=Connect)
         
@@ -291,12 +303,20 @@ class Chat_window:
 
          
 class Send_Receive:
-    def __init__(self,main):
+    def __init__(self,main,e,p):
+        #the instance of the chat window
         self.main=main
-        
+        self.e=e
+        self.p=p
+
+    @tl.job(interval=timedelta(seconds=1))    
+    def listen():
+        sr.receive()
+
+            
+            
     
-    
-    @tl.job(interval=timedelta(seconds=1))
+    #@tl.job(interval=timedelta(seconds=1))
     def receive(self):
         import email
         global messages
@@ -305,15 +325,15 @@ class Send_Receive:
 
         # !~for development ONLY~!
 
-        self.FROM_EMAIL = e 
-        self.FROM_PWD = p
+        self.FROM_EMAIL = self.e 
+        self.FROM_PWD = self.p
         self.SMTP_SERVER = "imap.gmail.com" 
         SMTP_PORT = 993
 
 
 
         if(mode==1):
-            k=read_email_from_gmail()
+            k=self.read_email_from_gmail()
 
             
 
@@ -324,7 +344,11 @@ class Send_Receive:
 
         
             print(k)
+
+            print("abracadabra")
             if(k[0]=="smtpchat" and lst[0]=="<"+current_email+">" and k[2].rstrip().strip() not in messages):
+                print("we are inside")
+
                 p=-1
                 for i in email_array:
                     p=p+1
@@ -334,7 +358,7 @@ class Send_Receive:
                 self.main.chatlog.config(state=tk.NORMAL)
 
                 #inserting into the window
-                self.main.chatlog.insert(tk.END, username_array[p]+" : "+k[2].rstrip().strip()+"\n")
+                self.main.chatlog.insert(tk.END,"\n"+username_array[p]+" : "+k[2].rstrip().strip()+"\n")
 
 
                 messages.append(k[2].rstrip().strip())
@@ -366,7 +390,7 @@ class Send_Receive:
                     self.main.chatlog.config(state=tk.DISABLED)
                 else:    
                     self.main.chatlog.config(state=tk.NORMAL)        
-                    self.main.chatlog.insert(tk.END, username_array[p]+" : "+k[2].rstrip()+"\n")
+                    self.main.chatlog.insert(tk.END,"\n"+ username_array[p]+" : "+k[2].rstrip()+"\n")
                     self.messages.append(k[2].rstrip())
                     self.main.chatlog.config(state=tk.DISABLED)
 
@@ -375,6 +399,7 @@ class Send_Receive:
     
     def read_email_from_gmail(self):
         try:
+            import email as emailmodule
             mail = imaplib.IMAP4_SSL(self.SMTP_SERVER)
             mail.login(self.FROM_EMAIL,self.FROM_PWD)
             mail.select('inbox')
@@ -388,7 +413,7 @@ class Send_Receive:
             for response_part in data:
                 arr = response_part[0]
                 if isinstance(arr, tuple):
-                    msg = email.message_from_string(str(arr[1],'utf-8'))
+                    msg = emailmodule.message_from_string(str(arr[1],'utf-8'))
                     email_subject = msg['subject']
                     email_from = msg['from']
             
