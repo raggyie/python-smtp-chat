@@ -1,4 +1,3 @@
-
 from tkinter import *
 import tkinter as tk
 from PIL import ImageTk, Image 
@@ -337,7 +336,7 @@ class Send_Receive:
 
             
 
-            lst = re.findall('\S+@\S+', k[1])     
+            #lst = re.findall('\S+@\S+', k[1])     
                 
         
 
@@ -346,7 +345,7 @@ class Send_Receive:
             print(k)
 
             print("abracadabra")
-            if(k[0]=="smtpchat" and lst[0]=="<"+current_email+">" and k[2].rstrip().strip() not in messages):
+            if(k[0]=="smtpchat" and k[1]==current_email and k[2].rstrip().strip() not in messages):
                 print("we are inside")
 
                 p=-1
@@ -358,7 +357,7 @@ class Send_Receive:
                 self.main.chatlog.config(state=tk.NORMAL)
 
                 #inserting into the window
-                self.main.chatlog.insert(tk.END,"\n"+username_array[p]+" : "+k[2].rstrip().strip()+"\n")
+                self.main.chatlog.insert(tk.END,"\n"+username_array[p].rstrip().strip()+" : "+k[2].rstrip()+"\n")
 
 
                 messages.append(k[2].rstrip().strip())
@@ -390,7 +389,7 @@ class Send_Receive:
                     self.main.chatlog.config(state=tk.DISABLED)
                 else:    
                     self.main.chatlog.config(state=tk.NORMAL)        
-                    self.main.chatlog.insert(tk.END,"\n"+ username_array[p]+" : "+k[2].rstrip()+"\n")
+                    self.main.chatlog.insert(tk.END, "\n"+username_array[p].rstrip().strip()+" : "+k[2].rstrip()+"\n")
                     self.messages.append(k[2].rstrip())
                     self.main.chatlog.config(state=tk.DISABLED)
 
