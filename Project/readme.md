@@ -1,2 +1,1 @@
-
-Just run pylol.py
+run main_final.py
